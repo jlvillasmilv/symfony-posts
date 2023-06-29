@@ -1,0 +1,58 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Posts!{% endblock %}
+
+{% block body %}
+ {{ parent() }}
+    {% for message in app.flashes('success') %}
+        <div style='color: green'> 
+            {{message}}
+        </div>
+    {% endfor %}
+        {% for post in posts %}
+                <div class="container bg-white rounded my-3 p-4">
+                    <div class="d-flex bd-highlight">
+                        <div class="p-2 flex-grow-1 bd-highlight">
+                            <h3>{{ post.title }}</h3>
+                            <div class="my-3" style="color: blue;">
+                                <i class="fa fa-thumbs-up"></i>
+                                Likes
+                                <strong><a href="{{ path('postDetails', {id:post.id}) }}">ver</a></strong>
+                               
+                            </div>
+                            <div style="color: green;">
+                                <i class="far fa-clock"></i>
+                                <strong>Fecha de publicacion: {{  post.createdAt ? post.createdAt|date('Y-m-d') : '' }}</strong>
+                            </div>
+                        </div>
+                        <div class="p-2 bd-highlight">
+                            <div class="align-self-center">
+                                <img class="rounded" src="{{ asset(post.file ?? 'img/logo.png')  }}" width="150px" alt="">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <hr>
+                    <div class="text-justify my-3">
+                        {{ post.description }}
+                       
+                    </div>
+                     <div style="color: green;">
+                           <i class="fa-regular fa-comment"></i>
+                           <strong>Comments:  {{ post.interactions.count }}</strong>
+                          
+                            {% if app.user %}
+                           <div class="d">
+                               <i class="fas fa-edit"></i>
+                               <strong><a href="{{ path('postEdit', {id:post.id}) }}">Edit</a></strong>
+                           </div>
+                           {% endif %}
+                           
+                    </div>
+                    <hr>
+                </div>
+        {% endfor %}
+        <div class="container navigation">
+            {{ knp_pagination_render(posts) }}
+        </div>
+{% endblock %}
